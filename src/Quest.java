@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Quest {
+    public final int numQuests;
     public final String name;
     public final String subject;
     public final LocalDate deadline;
@@ -49,6 +50,14 @@ public class Quest {
             default:
                 return "Unknown";
         }
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 
     /**

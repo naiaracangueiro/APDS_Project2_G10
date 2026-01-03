@@ -67,10 +67,30 @@ public class Main {
 
                     switch(p2) {
                         case "1":
+                            FIQBruteForce.runWithTimer(quests, new Timer());
                             break;
                         case "2":
+                            FIQBacktracking.runWithTimer(quests, new Timer());
                             break;
                         case "3":
+                            String greedyChoice = printGreedyHeuristics();
+                            switch(greedyChoice) {
+                                case "1":
+                                    FIQGreedy.runFirstFit(quests, new Timer());
+                                    break;
+                                case "2":
+                                    FIQGreedy.runFirstFitDecreasing(quests, new Timer());
+                                    break;
+                                case "3":
+                                    FIQGreedy.runPriorityBased(quests, new Timer());
+                                    break;
+                                case "4":
+                                    FIQGreedy.runBestFit(quests, new Timer());
+                                    break;
+                                default:
+                                    System.out.println("Invalid option.\n");
+                                    break;
+                            }
                             break;
                         default:
                             System.out.println("Invalid option.\n");
@@ -134,6 +154,19 @@ public class Main {
         System.out.println("\t2. Backtracking");
         System.out.println("\t3. Greedy");
         System.out.println("\t4. Exit");
+        System.out.print("Enter your choice: ");
+        String choice = sc.nextLine().trim();
+
+        return choice;
+    }
+
+    private static String printGreedyHeuristics() {
+        System.out.println("\n....... GREEDY HEURISTICS .......");
+        System.out.println("Choose the heuristic: ");
+        System.out.println("\t1. First Fit");
+        System.out.println("\t2. First Fit Decreasing");
+        System.out.println("\t3. Priority-Based");
+        System.out.println("\t4. Best Fit");
         System.out.print("Enter your choice: ");
         String choice = sc.nextLine().trim();
 

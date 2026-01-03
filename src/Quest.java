@@ -51,6 +51,14 @@ public class Quest {
         }
     }
 
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
     /**
      * Returns a formatted string representation of the quest.
      * @return String with quest information
@@ -58,7 +66,7 @@ public class Quest {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return String.format("%-50s | %-15s | %s | Difficulty: %2d | Progress: %3d%% | %s",
+        return String.format("%s | %s | %s | Difficulty: %d | Progress: %d | %s",
                 name, subject, deadline.format(formatter), difficulty, progress, getImportanceName());
     }
 

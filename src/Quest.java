@@ -2,7 +2,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Quest {
-    public final int numQuests;
     public final String name;
     public final String subject;
     public final LocalDate deadline;
@@ -67,7 +66,7 @@ public class Quest {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return String.format("%-50s | %-15s | %s | Difficulty: %2d | Progress: %3d%% | %s",
+        return String.format("%s | %s | %s | Difficulty: %d | Progress: %d | %s",
                 name, subject, deadline.format(formatter), difficulty, progress, getImportanceName());
     }
 

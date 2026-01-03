@@ -1,10 +1,9 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WOFEvaluator {
+public class WODEvaluator {
     private static final int DAILY_MAX_MIN = 480;
 
     // It will return the number of quests or -1 if its invalid
@@ -27,6 +26,7 @@ public class WOFEvaluator {
             if (sum > DAILY_MAX_MIN) {
                 return -1;
             }
+            questsByDeadline.put(deadline, sum);
 
             // sum subjects count and time
             String subject = quest.getSubject();

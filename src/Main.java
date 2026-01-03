@@ -53,6 +53,7 @@ public class Main {
                             WODBruteForce.runWithTimer(quests, maxTime, new Timer());
                             break;
                         case "2":
+                            WODBacktracking.runWithTimer(quests, maxTime, new Timer());
                             break;
                         case "3":
                             break;

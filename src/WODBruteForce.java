@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,11 +44,8 @@ public class WODBruteForce {
     }
 
     private static void checkSolution(int[] config, int maxTime) {
-        // Create list of selected quests based on config
-        List<Quest> selectedQuests = createList(config);
-
-        // Evaluate returns -1 if constraints violated, otherwise total quest value
-        int totalQuests = WODEvaluator.evaluate(selectedQuests, maxTime);
+        // Evaluate directly using config array (no intermediate list creation)
+        int totalQuests = WODEvaluator.evaluate(quests, config, maxTime);
 
         // Update best if valid and better value (maximization problem)
         if (totalQuests != -1 && totalQuests > bestSol) {
@@ -72,17 +68,6 @@ public class WODBruteForce {
         System.out.println("\tBest solution: " + bestSol + " quests in " + maxTime + " minutes.");
         System.out.println("\tBest config: ");
         printConfig(bestConfig);
-    }
-
-    /** Converts binary config array to list of selected quests */
-    private static List<Quest> createList(int[] config) {
-        List<Quest> selected = new ArrayList<>();
-        for (int i = 0; i < config.length; i++) {
-            if (config[i] == 1) {
-                selected.add(quests.get(i));
-            }
-        }
-        return selected;
     }
 
     private static void printConfig(int[] config) {

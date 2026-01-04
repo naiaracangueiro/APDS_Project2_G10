@@ -2,15 +2,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Quest {
-    public final String name;
-    public final String subject;
-    public final LocalDate deadline;
-    public final int estimatedTime;
-    public final int difficulty;
-    public final int progress;
-    public final String importance;
-    public final int locX;
-    public final int locY;
+    private final String name;
+    private final String subject;
+    private final LocalDate deadline;
+    private final int estimatedTime;
+    private final int difficulty;
+    private final int progress;
+    private final String importance;
+    private final int locX;
+    private final int locY;
 
     public Quest (String name, String subject, LocalDate deadline, int estimatedTime,
                   int difficulty, int progress, String importance, int locX, int locY) {
@@ -57,6 +57,10 @@ public class Quest {
 
     public String getSubject() {
         return subject;
+    }
+
+    public int getEstimatedTime() {
+        return estimatedTime;
     }
 
     /**

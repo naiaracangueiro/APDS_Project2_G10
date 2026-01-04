@@ -56,6 +56,7 @@ public class Main {
                             WODBacktracking.runWithTimer(quests, maxTime, new Timer());
                             break;
                         case "3":
+                            WODBnB.runWithTimer(quests, maxTime, new Timer());
                             break;
                         default:
                             System.out.println("Invalid option.\n");

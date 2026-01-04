@@ -92,7 +92,7 @@ public class WODBacktracking {
         // Check if the sum of time for the quest deadline already exceeds the limit
         LocalDate deadline = q.getDeadline();
         int oldTime = timeByDeadline.getOrDefault(deadline, 0);
-        int newTime = oldTime + q.estimatedTime;
+        int newTime = oldTime + q.getEstimatedTime();
         if (newTime > DAILY_MAX_MIN) {
             questsValue -= getValue(q);
             return -1;
@@ -107,7 +107,7 @@ public class WODBacktracking {
         current -= calculateSubjectTime(oldCount, oldSubTime);
 
         int newCount = oldCount + 1;
-        int newSubTime = oldSubTime + q.estimatedTime;
+        int newSubTime = oldSubTime + q.getEstimatedTime();
         countBySubject.put(subject, newCount);
         timeBySubject.put(subject, newSubTime);
 
@@ -139,7 +139,7 @@ public class WODBacktracking {
         // Undo the previous sum for the quest deadline
         LocalDate deadline = q.getDeadline();
         int currTime = timeByDeadline.getOrDefault(deadline, 0);
-        int oldTime = currTime - q.estimatedTime;
+        int oldTime = currTime - q.getEstimatedTime();
         if (oldTime == 0) {
             timeByDeadline.remove(deadline);
         } else {
@@ -154,7 +154,7 @@ public class WODBacktracking {
         current -= calculateSubjectTime(currCount, currSubTime);
 
         int oldCount = currCount - 1;
-        int oldSubTime = currSubTime - q.estimatedTime;
+        int oldSubTime = currSubTime - q.getEstimatedTime();
 
         if (oldCount == 0) {
             countBySubject.remove(subject);

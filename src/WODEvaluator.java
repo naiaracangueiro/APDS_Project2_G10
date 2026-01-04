@@ -22,7 +22,7 @@ public class WODEvaluator {
 
             // sum deadlines' time
             LocalDate deadline = quest.getDeadline();
-            int sum = questsByDeadline.getOrDefault(deadline, 0) + quest.estimatedTime;
+            int sum = questsByDeadline.getOrDefault(deadline, 0) + quest.getEstimatedTime();
             if (sum > DAILY_MAX_MIN) {
                 return -1;
             }
@@ -31,7 +31,7 @@ public class WODEvaluator {
             // sum subjects count and time
             String subject = quest.getSubject();
             countBySubject.put(subject, countBySubject.getOrDefault(subject, 0) + 1);
-            timeBySubject.put(subject, timeBySubject.getOrDefault(subject, 0) + quest.estimatedTime);
+            timeBySubject.put(subject, timeBySubject.getOrDefault(subject, 0) + quest.getEstimatedTime());
         }
 
         // Calculate the total time (applying reduction if needed)

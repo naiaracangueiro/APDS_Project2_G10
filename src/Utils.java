@@ -74,7 +74,7 @@ public class Utils {
         Collections.sort(sorted, new Comparator<Quest>() {
             @Override
             public int compare(Quest q1, Quest q2) {
-                return q2.estimatedTime - q1.estimatedTime;
+                return q2.getEstimatedTime() - q1.getEstimatedTime();
             }
         });
         return sorted;
@@ -90,15 +90,18 @@ public class Utils {
         int commonCount = 0;
 
         for (Quest q : quests) {
-            totalTime += q.estimatedTime;
+            totalTime += q.getEstimatedTime();
             if (isCommon(q)) {
                 commonCount++;
             }
         }
 
+        // Minimum weeks needed based on time constraint (1200 min/week)
         int byTime = (int) Math.ceil(totalTime / 1200.0);
+        // Minimum weeks needed based on common quest constraint (6 common/week)
         int byCommon = (int) Math.ceil(commonCount / 6.0);
 
+        // Take the maximum of both constraints, at least 1 week
         return Math.max(Math.max(byTime, byCommon), 1);
     }
 
@@ -134,8 +137,8 @@ public class Utils {
             for (int i = 0; i < quests.size(); i++) {
                 if (config[i] == w) {
                     Quest q = quests.get(i);
-                    System.out.println("\t  - " + q.name + " (" + q.estimatedTime + " min, " + q.getImportanceName() + ")");
-                    totalTime += q.estimatedTime;
+                    System.out.println("\t  - " + q.getName() + " (" + q.getEstimatedTime() + " min, " + q.getImportanceName() + ")");
+                    totalTime += q.getEstimatedTime();
                     if (isCommon(q)) {
                         commonCount++;
                     }
@@ -168,7 +171,7 @@ public class Utils {
     public static int totalTime(List<Quest> quests) {
         int total = 0;
         for (Quest q : quests) {
-            total += q.estimatedTime;
+            total += q.getEstimatedTime();
         }
         return total;
     }

@@ -22,7 +22,7 @@ public class FIQBacktracking {
      */
     private static void backtracking(int[] config, int level, int[] timePerWeek, int[] commonPerWeek) {
         Quest currentQuest = quests.get(level);
-        int questTime = currentQuest.estimatedTime;
+        int questTime = currentQuest.getEstimatedTime();
         boolean isCommon = Utils.isCommon(currentQuest);
 
         for (int week = 0; week < maxWeeks; week++) {

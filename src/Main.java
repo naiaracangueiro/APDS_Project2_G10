@@ -2,6 +2,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class with interactive menu for APDS of Warcraft Project 2.
+ * Allows users to solve the Wall of Deadlines (WOD) and Festival of Infinite Quests (FIQ) problems
+ * using different combinatorial optimization algorithms.
+ */
 public class Main {
     private static final Scanner sc = new Scanner(System.in);
 
@@ -58,6 +63,8 @@ public class Main {
                         case "3":
                             WODBnB.runWithTimer(quests, maxTime, new Timer());
                             break;
+                        case "4":
+                            break;
                         default:
                             System.out.println("Invalid option.\n");
                             break;
@@ -93,6 +100,8 @@ public class Main {
                                     System.out.println("Invalid option.\n");
                                     break;
                             }
+                            break;
+                        case "4":
                             break;
                         default:
                             System.out.println("Invalid option.\n");

@@ -19,13 +19,16 @@ public class FIQBruteForce {
      * @param level current decision level (quest index)
      */
     private static void bruteForce(int[] config, int level) {
+        // Try assigning current quest to each possible week
         for (int week = 0; week < maxWeeks; week++) {
             config[level] = week;
             configurationsGenerated++;
 
             if (level < config.length - 1) {
+                // Not at last level, continue exploring
                 bruteForce(config, level + 1);
             } else {
+                // Complete configuration reached, evaluate it
                 nodesExplored++;
                 checkSolution(config);
             }
@@ -37,13 +40,19 @@ public class FIQBruteForce {
      * @param loadedQuests the list of quests to schedule
      */
     private static void run(List<Quest> loadedQuests) {
+        // Preprocessing: sort by importance (Legendary first)
         quests = Utils.sortByImportanceDesc(loadedQuests);
+
+        // Calculate upper bound for weeks needed
         maxWeeks = Utils.calculateMaxWeeks(quests);
+
+        // Initialize best solution tracking
         bestWeeks = Integer.MAX_VALUE;
         bestConfig = null;
         nodesExplored = 0;
         configurationsGenerated = 0;
 
+        // config[i] = week assigned to quest i
         int[] config = new int[quests.size()];
         Arrays.fill(config, -1);
 
@@ -55,8 +64,10 @@ public class FIQBruteForce {
      * @param config the configuration to check
      */
     private static void checkSolution(int[] config) {
+        // Evaluate returns -1 if constraints violated, otherwise number of weeks
         int weeksUsed = FIQEvaluator.evaluate(quests, config);
 
+        // Update best if valid and uses fewer weeks
         if (weeksUsed != -1 && weeksUsed < bestWeeks) {
             bestWeeks = weeksUsed;
             bestConfig = config.clone();

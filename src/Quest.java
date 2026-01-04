@@ -63,6 +63,10 @@ public class Quest {
         return estimatedTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
     /**
      * Returns a formatted string representation of the quest.
      * @return String with quest information

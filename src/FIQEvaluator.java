@@ -17,25 +17,31 @@ public class FIQEvaluator {
      * @return the number of weeks used, or -1 if constraints are violated
      */
     public static int evaluate(List<Quest> quests, int[] config) {
+        // Determine how many weeks are used in this configuration
         int maxWeeks = Utils.getWeeksUsed(config);
 
+        // Arrays to accumulate constraints per week
         int[] timePerWeek = new int[maxWeeks];
         int[] commonPerWeek = new int[maxWeeks];
 
+        // First pass: accumulate time and common count for each week
         for (int i = 0; i < quests.size(); i++) {
             int week = config[i];
             Quest q = quests.get(i);
 
-            timePerWeek[week] += q.estimatedTime;
+            timePerWeek[week] += q.getEstimatedTime();
             if (Utils.isCommon(q)) {
                 commonPerWeek[week]++;
             }
         }
 
+        // Second pass: check constraints for each week
         for (int w = 0; w < maxWeeks; w++) {
+            // Constraint 1: Max 1200 minutes (20 hours) per week
             if (timePerWeek[w] > WEEKLY_MAX_MINUTES) {
                 return -1;
             }
+            // Constraint 2: Max 6 common quests per week
             if (commonPerWeek[w] > MAX_COMMON_PER_WEEK) {
                 return -1;
             }
@@ -53,11 +59,13 @@ public class FIQEvaluator {
      * @return true if the quest can be added without violating constraints
      */
     public static boolean canAddToWeek(Quest quest, int week, int[] timePerWeek, int[] commonPerWeek) {
-        int newTime = timePerWeek[week] + quest.estimatedTime;
+        // Check time constraint: would adding this quest exceed 1200 min?
+        int newTime = timePerWeek[week] + quest.getEstimatedTime();
         if (newTime > WEEKLY_MAX_MINUTES) {
             return false;
         }
 
+        // Check common quest constraint: already 6 common quests in this week?
         if (Utils.isCommon(quest) && commonPerWeek[week] >= MAX_COMMON_PER_WEEK) {
             return false;
         }

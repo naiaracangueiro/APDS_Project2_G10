@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Dataset loader for reading quest data from .paed files.
+ */
 public class DSLoader {
     // Date format used by the dataset
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d-M-yyyy");
@@ -27,27 +30,31 @@ public class DSLoader {
         List<Quest> quests = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            // First line is the header (total quest count), skip it
             String firstLine = br.readLine();
             if (firstLine == null) {
                 throw new IOException("Empty file: " + path);
             }
 
+            // Read up to numQuests lines
             for (int i = 0; i < numQuests; i++) {
                 String line = br.readLine();
                 if (line == null) break;
 
-                // Skip blank lines
+                // Skip blank lines but don't count them
                 line = line.trim();
                 if (line.isEmpty()) {
                     i--;
                     continue;
                 }
 
+                // Each line has 8 fields separated by semicolons
                 String[] fields = line.split(";");
                 if (fields.length != 8) {
                     throw new IOException("Invalid quest line. Missing information at line " + (i + 2));
                 }
 
+                // Parse each field from the CSV format
                 String name = fields[0].trim();
                 String subject = fields[1].trim();
                 LocalDate deadline = LocalDate.parse(fields[2].trim(), DATE_FORMAT);
@@ -56,6 +63,7 @@ public class DSLoader {
                 int progress = Integer.parseInt(fields[5].trim());
                 String importance = fields[6].trim();
 
+                // Location is in format "x-y"
                 String[] locations = fields[7].trim().split("-");
                 int locX = Integer.parseInt(locations[0].trim());
                 int locY = Integer.parseInt(locations[1].trim());

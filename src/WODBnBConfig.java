@@ -1,6 +1,11 @@
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Configuration class for the Branch and Bound algorithm.
+ * Represents a partial solution and implements Comparable for priority queue ordering.
+ * Each config tracks selected quests and accumulated constraints via marking.
+ */
 public class WODBnBConfig implements Comparable<WODBnBConfig> {
     // represents which quests we pick
     private final int[] config;
@@ -37,15 +42,23 @@ public class WODBnBConfig implements Comparable<WODBnBConfig> {
         this.timeBySubject = new HashMap<>(that.timeBySubject);
     }
 
+    /**
+     * Generates child configurations by trying to add each remaining quest.
+     * @return list of valid child configurations
+     */
     public List<WODBnBConfig> expand() {
         List<WODBnBConfig> children = new ArrayList<>();
 
+        // Try adding each unassigned quest after the last selected one
         for (int i = lastIndex + 1; i < WODBnBGlobals.N; i++) {
+            // Skip already selected quests
             if (config[i] == 1) continue;
 
             Quest quest = WODBnBGlobals.QUESTS.get(i);
+            // Create a copy of current config and try adding this quest
             WODBnBConfig next = new WODBnBConfig(this);
             if (next.checkQuest(i, quest)) {
+                // Quest was valid and added, include in children
                 children.add(next);
             }
 
@@ -54,38 +67,48 @@ public class WODBnBConfig implements Comparable<WODBnBConfig> {
         return children;
     }
 
+    /**
+     * Checks if adding a quest is valid and updates marking if so.
+     * @return true if quest was successfully added, false if constraints violated
+     */
     private boolean checkQuest(int index, Quest q) {
-        // Check deadline time limit
+        // Constraint 1: Check deadline time limit (max 480 min per deadline)
         LocalDate deadline = q.getDeadline();
         int newTime = timeByDeadline.getOrDefault(deadline, 0) + q.getEstimatedTime();
         if (newTime > WODBnBGlobals.DAILY_MAX_MIN) return false;
 
-        // Check if reduction can be applied
+        // Calculate time difference with 10% subject discount
         String subject = q.getSubject();
         int oldCount = countBySubject.getOrDefault(subject, 0);
         int oldSubTime = timeBySubject.getOrDefault(subject, 0);
 
-        int oldTotalTime = calculateSubjectTime(oldCount, oldSubTime);
+        // Get time contribution before adding this quest
+        double oldTotalTime = calculateSubjectTime(oldCount, oldSubTime);
 
         int newCount = oldCount + 1;
         int newSubTime = oldSubTime + q.getEstimatedTime();
 
-        int newTotalTime = calculateSubjectTime(newCount, newSubTime);
+        // Get time contribution after adding this quest (may include 10% discount)
+        double newTotalTime = calculateSubjectTime(newCount, newSubTime);
 
-        int timeResult = this.time + (newTotalTime - oldTotalTime);
+        // Calculate new total time: current + difference (discount is applied incrementally)
+        double timeResult = this.time + (newTotalTime - oldTotalTime);
+
+        // Constraint 2: Check overall time limit
         if (timeResult > WODBnBGlobals.TIME_LIMIT) return false;
 
-        // If it's under the limit we update the values
+        // Both constraints passed, update marking variables
         timeByDeadline.put(deadline, newTime);
         countBySubject.put(subject, newCount);
-        timeBySubject.put(subject, (int) newSubTime);
+        timeBySubject.put(subject, newSubTime);
 
         this.time = (int) timeResult;
         this.questsValue += getValue(q);
 
+        // Mark quest as selected in config
         config[index] = 1;
 
-        // Store the config
+        // Update progress tracking
         this.level++;
         this.lastIndex = index;
 
@@ -100,9 +123,9 @@ public class WODBnBConfig implements Comparable<WODBnBConfig> {
         else return 1;
     }
 
-    private int calculateSubjectTime(int count, int minutes) {
+    private double calculateSubjectTime(int count, int minutes) {
         if (count >= 2) {
-            return (minutes * 9) / 10;
+            return minutes * 0.9;
         }
         return minutes;
     }
@@ -123,7 +146,10 @@ public class WODBnBConfig implements Comparable<WODBnBConfig> {
         return config;
     }
 
-    // upper bound -> all the remaining quests are legendary
+    /**
+     * Calculates upper bound estimate assuming all remaining quests are Legendary.
+     * Used for pruning: if estimate <= bestSol, this branch can be discarded.
+     */
     public int estimate() {
         int remaining = WODBnBGlobals.N - (lastIndex + 1);
         return questsValue + 5 * remaining;

@@ -116,6 +116,7 @@ public class PerformanceMetrics {
      * @param metrics the list of metrics to export
      */
     public static void exportToCSV(String filename, List<PerformanceMetrics> metrics) {
+        // Create directory if it doesn't exist
         File directory = new File(CSV_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -123,13 +124,17 @@ public class PerformanceMetrics {
 
         String filePath = CSV_DIRECTORY + "/" + filename;
         File file = new File(filePath);
+        // Check if file exists to decide whether to write header
         boolean fileExists = file.exists();
 
+        // Append mode (true) to add to existing file
         try (PrintWriter writer = new PrintWriter(new FileWriter(file, true))) {
+            // Write header only for new files
             if (!fileExists) {
                 writer.println(CSV_HEADER);
             }
 
+            // Write each metric as a CSV line
             for (PerformanceMetrics metric : metrics) {
                 writer.println(metric.toCSVLine());
             }

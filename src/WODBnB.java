@@ -72,4 +72,9 @@ public class WODBnB {
             }
         }
     }
+
+    /** @return the best solution value found */
+    public static int getBestSolution() {
+        return bestSol;
+    }
 }

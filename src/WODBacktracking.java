@@ -207,4 +207,9 @@ public class WODBacktracking {
 
         return current;
     }
+
+    /** @return the best solution value found */
+    public static int getBestSolution() {
+        return bestSol;
+    }
 }
